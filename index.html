@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #0001ff40;
+    }
+    .play {
+      text-align: center;
+      width: 100%;
+    }
+    .tombol {
+      padding: 10px 15px;
+      margin: 0 10px;
+      border-radius: 10px;
+      border: 0;
+      background-color: rgb(72, 44, 252);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.5s;
+      font-size: 16px;
+    }
+    .tombol:hover {
+      font-size: 18px;
+      background-color: rgb(92, 67, 250);
+    }
+    #console {
+      font-size: 35px;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+  </style>
+  <body>
+    <div id="console">Bem vindo ao aplicativo, experimente!</div>
+    <div class="play">
+      <button class="tombol" id="speak" onclick="   MONIKA_START()">
+        Vamos conversar
+      </button>
+      <button class="tombol" id="berhenti" onclick="STOP_MONIKA()">
+        Já pode parar
+      </button>
+    </div>
+
+    <script src="artyom.window.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      const monika = new Artyom();
+
+      monika.addCommands([
+        {
+          indexes: ["olá", "quem é você?", "como vai?"],
+          action: function (i) {
+            if (i == 0) {
+              monika.say("Olá, meu nome é Monika, como posso ajudar?");
+            } else if (i == 1) {
+              monika.say("meu nome é Monika, sou assistente pessoal de Samuel!");
+            } else if (i == 2) {
+              monika.say("Vou muito bem, obrigado por perguntar!");
+            }
+          },
+        },
+        {
+          smart: true,
+          indexes: ["Repita comigo *"],
+          action: function (i, wildcard) {
+            monika.say("Você acabou de dizer que " + wildcard);
+          },
+        },
+      ]);
+      function MONIKA_START() {
+        monika
+          .initialize({
+            lang: "pt-BR",
+            continuous: true,
+            soundex: true,
+            debug: true,
+            listen: true,
+          })
+          .then(() => {
+            console.log("Monika Inicializada!");
+            $("#console").empty();
+            $("#console").append(
+              "Por favor, diga algo mais tarde, aparecerá de qualquer maneira!"
+            );
+          })
+          .catch((err) => {
+            console.log(err);
+            $("#console").append("Eu não entendi!");
+          });
+      }
+
+      function STOP_MONIKA() {
+        monika.fatality().then(() => {
+          $("#console").empty();
+          $("#console").append(
+            "Parada do aplicativo. Por favor, pressione o botão ao lado se quiser dizer mais!"
+          );
+        });
+      }
+    </script>
+  </body>
+</html>
