@@ -4,56 +4,21 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Monika Interface</title>
+    <link href="style.css" rel="stylesheet" />
+    <link rel="icon" href="./assets/cardinal.jpg" />
   </head>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-    }
 
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-color: #0001ff40;
-    }
-    .play {
-      text-align: center;
-      width: 100%;
-    }
-    .tombol {
-      padding: 10px 15px;
-      margin: 0 10px;
-      border-radius: 10px;
-      border: 0;
-      background-color: rgb(72, 44, 252);
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.5s;
-      font-size: 16px;
-    }
-    .tombol:hover {
-      font-size: 18px;
-      background-color: rgb(92, 67, 250);
-    }
-    #console {
-      font-size: 35px;
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
-  </style>
   <body>
-    <div id="console">Bem vindo ao aplicativo, experimente!</div>
+
+    <div id="console">
+      <h1>Bem vindo a interface da assistente pessoal Monika<br>aperte para conversar!</h1>
+    </div>
     <div class="play">
-      <button class="tombol" id="speak" onclick="   MONIKA_START()">
+      <button class="tombol" id="speak" onclick=" MONIKA_START()">
         Vamos conversar
       </button>
-      <button class="tombol" id="berhenti" onclick="STOP_MONIKA()">
+      <button class="tombol" id="berhenti" onclick=" STOP_MONIKA()">
         Já pode parar
       </button>
     </div>
@@ -62,7 +27,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
       const monika = new Artyom();
+      
+      //Config para inicialização do artyom
+      var config = {
+            lang: "pt-BR",
+            continuous: true,
+            soundex: true,
+            debug: true,
+            listen: true,
+      }
 
+      //Modelo de criação de comandos de voz
       monika.addCommands([
         {
           indexes: ["olá", "quem é você?", "como vai?"],
@@ -76,33 +51,72 @@
             }
           },
         },
+
+        //Comando de repetir a fala do usuário
         {
           smart: true,
           indexes: ["Repita comigo *"],
           action: function (i, wildcard) {
-            monika.say("Você acabou de dizer que " + wildcard);
+            monika.say("Você acabou de dizer " + wildcard);
           },
         },
-      ]);
+
+        //Comando para saber as horas
+        {
+        indexes: ["Que horas são"],
+        action: function(i){
+            if(i==0){
+                data = new Date();
+                horas = data.getHours();
+                minutos = data.getMinutes();
+                monika.say("São "+horas+" e "+minutos+"minutos");
+            }
+        }
+      },
+
+        //Comando para parar
+        {
+        indexes: ["Já pode parar"],
+        action: function(i){
+            if(i==0){
+                monika.say("Ok, ficarei a disposição caso precisar.");
+                STOP_MONIKA()
+            }
+        }
+      },
+
+      //Comando para abrir alguma rede social
+      {
+      indexes: ["Abra meu *"],
+        smart:true,
+        action: function(i, str){
+
+            if((str=="facebook") || (str=="Facebook")){
+               monika.say("Abrindo o Facebook");
+               window.open("https://www.facebook.com","_blank");
+            }else if((str=="youtube") || (str=="Youtube")){
+                monika.say("Abrindo o Youtube");
+                window.open("https://www.youtube.com/","_blank");
+            }
+
+        }
+      },
+      //Fim do espaço para comandos.
+    ]);
+    
+      //FUNÇÕES START E STOP DA MONIKA
       function MONIKA_START() {
-        monika
-          .initialize({
-            lang: "pt-BR",
-            continuous: true,
-            soundex: true,
-            debug: true,
-            listen: true,
-          })
+        monika.initialize(config)
           .then(() => {
             console.log("Monika Inicializada!");
             $("#console").empty();
             $("#console").append(
-              "Por favor, diga algo mais tarde, aparecerá de qualquer maneira!"
+              "Pode dizer, eu estou te ouvindo!"
             );
           })
           .catch((err) => {
             console.log(err);
-            $("#console").append("Eu não entendi!");
+            $("#console").append("Não foi possível entender o que o usuário disse.");
           });
       }
 
@@ -110,7 +124,7 @@
         monika.fatality().then(() => {
           $("#console").empty();
           $("#console").append(
-            "Parada do aplicativo. Por favor, pressione o botão ao lado se quiser dizer mais!"
+            "Ok, não estou mais te ouvindo. Se precisar pode clicar novamente para conversar!"
           );
         });
       }
