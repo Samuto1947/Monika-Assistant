@@ -10,7 +10,11 @@
   </head>
 
   <body>
-
+    <div>
+      <span id="face">
+        <img src="./assets/Logo.png">
+      </span>
+   </div>
     <div id="console">
       <h1>Bem vindo a interface da assistente pessoal Monika<br>aperte para conversar!</h1>
     </div>
@@ -22,7 +26,10 @@
         Já pode parar
       </button>
     </div>
-
+    <div>
+      <h1 style="margin-top: 22px;">Entrada:</h1>
+      <span id="output"></span>
+   </div>
     <script src="artyom.window.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
@@ -104,6 +111,16 @@
       //Fim do espaço para comandos.
     ]);
     
+    monika.redirectRecognizedTextOutput(function(text,isFinal){
+	    var span =  document.getElementById("output");
+
+	    if(isFinal){
+		    span.innerHTML = text;
+	    }else{
+		    span.innerHTML = span.innerHTML+".";
+	    }
+});
+
       //FUNÇÕES START E STOP DA MONIKA
       function MONIKA_START() {
         monika.initialize(config)
