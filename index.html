@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Monika Interface</title>
     <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="./assets/cardinal.jpg" />
+    <link rel="icon" href="./assets/monika.png" />
   </head>
 
   <body>
@@ -98,9 +98,9 @@
         smart:true,
         action: function(i, str){
 
-            if((str=="facebook") || (str=="Facebook")){
-               monika.say("Abrindo o Facebook");
-               window.open("https://www.facebook.com","_blank");
+            if((str=="linkedin") || (str=="Linkedin")){
+               monika.say("Abrindo o Linkedin");
+               window.open("https://www.linkedin.com/in/samuel-trubano-da-silva-a48319237/","_blank");
             }else if((str=="youtube") || (str=="Youtube")){
                 monika.say("Abrindo o Youtube");
                 window.open("https://www.youtube.com/","_blank");
@@ -111,6 +111,7 @@
       //Fim do espaço para comandos.
     ]);
     
+    //Código para aparecer a entrada no site
     monika.redirectRecognizedTextOutput(function(text,isFinal){
 	    var span =  document.getElementById("output");
 
